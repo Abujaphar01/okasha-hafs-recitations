@@ -1,0 +1,40 @@
+{
+  "name": "Sheikh Okasha Kameny - Hafs Recitations",
+  "short_name": "Okasha Hafs",
+  "description": "Strictly Verified Hafs 'An-Asim Recitations by Sheikh Okasha Kameny",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#03120d",
+  "theme_color": "#03120d",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["music", "books", "education", "lifestyle"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
