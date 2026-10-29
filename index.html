@@ -64,10 +64,10 @@
   </div>
 
   <!-- Header -->
-  <header class="sticky top-0 z-40 bg-emerald-950/85 backdrop-blur-xl border-b border-emerald-800/40 px-4 py-3 sm:px-6">
-    <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
+  <header class="sticky top-0 z-40 bg-emerald-950/90 backdrop-blur-xl border-b border-emerald-800/40 px-4 py-3 sm:px-6">
+    <div class="max-w-3xl mx-auto flex items-center justify-between gap-4">
       <div class="flex items-center gap-3 min-w-0">
-        <div class="relative w-10 h-10 rounded-xl overflow-hidden ring-2 ring-gold-500/50 shadow-md shadow-emerald-950/80 shrink-0">
+        <div class="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-gold-500/50 shadow-md shrink-0 bg-emerald-900">
           <img src="img/sheikh_okasha_thumb.jpg" alt="Sheikh Okasha Kameny" class="w-full h-full object-cover">
         </div>
         <div class="min-w-0">
@@ -77,106 +77,72 @@
               حفص عن عاصم
             </span>
           </h1>
-          <p class="text-[11px] text-emerald-400/80 truncate font-medium">Strictly Hafs 'An-Asim Recitations</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
         <!-- PWA Install Button -->
-        <button id="pwaInstallBtn" class="hidden flex items-center gap-1.5 text-xs bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-emerald-950 font-extrabold px-3 py-1.5 rounded-full shadow-md shadow-gold-500/20 transition-all active:scale-95 animate-pulse">
+        <button id="pwaInstallBtn" class="hidden flex items-center gap-1.5 text-xs bg-gold-500 hover:bg-gold-400 text-emerald-950 font-bold px-3 py-1.5 rounded-full shadow-md transition-all active:scale-95">
           <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v7.586l2.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 10.586V3a1 1 0 011-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg>
-          <span>Install Web App</span>
+          <span>Install App</span>
         </button>
 
-        <!-- Network / Offline Status Badge -->
-        <div id="networkBadge" class="hidden items-center gap-1.5 text-[11px] bg-emerald-900/60 border border-emerald-700/50 text-emerald-300 px-2.5 py-1 rounded-full font-medium">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-          <span>Online</span>
-        </div>
-
-        <span id="trackCountBadge" class="text-xs bg-emerald-900/80 border border-emerald-700/50 text-emerald-300 px-3 py-1 rounded-full font-semibold">
-          9 Verified Recitations
+        <span id="trackCountBadge" class="text-xs text-emerald-400/80 font-medium px-2 py-1 rounded-lg bg-emerald-900/40 border border-emerald-800/40">
+          9 Recitations
         </span>
       </div>
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-5 flex-1 flex flex-col gap-6">
+  <main class="max-w-3xl mx-auto w-full px-4 sm:px-6 pt-5 flex-1 flex flex-col gap-5">
 
-    <!-- Hero / Reciter Card with Authentic Photo -->
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900/90 via-emerald-850/80 to-emerald-950/95 border border-emerald-700/40 p-5 sm:p-7 shadow-2xl shadow-emerald-950/80">
+    <!-- Clean Reciter Profile Card -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-emerald-900/50 to-emerald-950/80 border border-emerald-800/40 p-6 sm:p-7 flex flex-col items-center text-center shadow-lg">
       
-      <!-- Decorative Islamic Pattern Accents -->
-      <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-gold-500/5 rounded-full blur-2xl pointer-events-none"></div>
-
-      <div class="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-5 sm:gap-6">
-        
-        <!-- Large Portrait of Sheikh Okasha -->
-        <div class="relative shrink-0 group">
-          <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl sm:rounded-3xl overflow-hidden ring-4 ring-gold-500/70 shadow-2xl shadow-gold-500/20 bg-emerald-900">
-            <img src="img/sheikh_okasha.jpg" alt="Sheikh Okasha Kameny" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-          </div>
-          <div class="absolute -bottom-2 -right-2 bg-gradient-to-r from-gold-500 to-gold-600 text-emerald-950 text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-md flex items-center gap-1 border border-gold-300">
-            <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
-            VERIFIED
-          </div>
-        </div>
-
-        <!-- Info & Bio -->
-        <div class="flex-1 text-center md:text-left min-w-0">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-800/50 border border-emerald-600/40 text-emerald-300 text-xs font-semibold mb-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-ping"></span>
-            Forensically Audited • 100% Pure Hafs
-          </div>
-
-          <h2 class="font-['Amiri'] text-3xl sm:text-4xl font-bold text-white tracking-wide">
-            الشيخ عكاشة حسَن كَمِينِي
-          </h2>
-          <h3 class="text-base sm:text-lg font-bold text-gold-300 mt-0.5">
-            Sheikh Okasha Hassan Kameny
-          </h3>
-          <p class="text-xs sm:text-sm text-emerald-200/80 mt-2 leading-relaxed max-w-xl">
-            A sanctuary of verified <span class="text-gold-300 font-semibold">Ḥafṣ ʿan ʿĀṣim</span> recitations, audited word-for-word against <span class="text-emerald-300 italic">Matn ash-Shāṭibiyyah</span> checkpoints. Guaranteed zero non-Ḥafṣ slips or mixed narrations.
-          </p>
-
-          <!-- Action Buttons & Quick Stats -->
-          <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-4 pt-2 border-t border-emerald-800/50">
-            <button id="playAllBtn" class="flex items-center gap-2 bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 hover:from-gold-400 hover:to-gold-300 text-emerald-950 font-extrabold px-5 py-2.5 rounded-xl shadow-lg shadow-gold-500/25 transition-all active:scale-95 text-xs sm:text-sm">
-              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              <span>Play All</span>
-            </button>
-
-            <button id="shuffleBtn" class="flex items-center gap-2 bg-emerald-800/40 hover:bg-emerald-700/50 border border-emerald-600/40 text-emerald-200 font-bold px-4 py-2.5 rounded-xl transition-all active:scale-95 text-xs sm:text-sm">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4h4l8 16h4M4 20h4l3-6m5-10h4v4m-4-4l-3 6"/></svg>
-              <span>Shuffle</span>
-            </button>
-
-            <button id="cacheAllBtn" class="flex items-center gap-2 bg-emerald-900/60 hover:bg-emerald-800/60 border border-emerald-700/50 text-emerald-300 font-semibold px-4 py-2.5 rounded-xl transition-all active:scale-95 text-xs sm:text-sm" title="Save all 9 recitations into browser memory for offline listening">
-              <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              <span id="cacheAllText">Save Offline</span>
-            </button>
-
-            <div class="text-[11px] font-semibold text-emerald-300/80 px-3 py-2 rounded-xl bg-emerald-950/50 border border-emerald-800/40">
-              ⏱ 44 Minutes • 9 Recitations
-            </div>
-          </div>
-        </div>
-
+      <!-- Sheikh Portrait (Clean Ring, No Badges) -->
+      <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-4 ring-gold-500/60 shadow-xl shadow-gold-500/10 bg-emerald-900 mb-3.5 shrink-0">
+        <img src="img/sheikh_okasha.jpg" alt="Sheikh Okasha Kameny" class="w-full h-full object-cover">
       </div>
+
+      <!-- Clean Typography -->
+      <h2 class="font-['Amiri'] text-3xl sm:text-4xl font-bold text-white tracking-wide">
+        الشيخ عكاشة حَسَن كَمِينِي
+      </h2>
+      <p class="text-sm sm:text-base font-semibold text-gold-300 mt-1">
+        Sheikh Okasha Hassan Kameny
+      </p>
+
+      <!-- Simple Play & Shuffle Action Buttons -->
+      <div class="flex items-center justify-center gap-3 mt-4">
+        <button id="playAllBtn" class="flex items-center gap-2 bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-emerald-950 font-bold px-5 py-2.5 rounded-xl shadow-md transition-all active:scale-95 text-xs sm:text-sm">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <span>Play All</span>
+        </button>
+
+        <button id="shuffleBtn" class="flex items-center gap-2 bg-emerald-900/50 hover:bg-emerald-800/60 border border-emerald-700/50 text-emerald-200 font-semibold px-4 py-2.5 rounded-xl transition-all active:scale-95 text-xs sm:text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4h4l8 16h4M4 20h4l3-6m5-10h4v4m-4-4l-3 6"/></svg>
+          <span>Shuffle</span>
+        </button>
+      </div>
+
     </div>
 
-    <!-- Search & Filter Bar -->
+    <!-- Search Bar -->
     <div class="relative">
-      <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-400">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-400/60">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
       </div>
       <input 
         id="searchInput" 
         type="text" 
-        placeholder="Search Surah name, number (e.g. 37, Taha), or ayah range..."
-        class="w-full pl-10 pr-10 py-3 rounded-2xl bg-emerald-900/35 border border-emerald-700/40 text-white placeholder-emerald-400/60 text-sm focus:outline-none focus:border-gold-500/70 focus:ring-2 focus:ring-gold-500/20 transition-all backdrop-blur-md"
+        placeholder="Search Surah..."
+        class="w-full pl-10 pr-10 py-3 rounded-2xl bg-emerald-900/30 border border-emerald-800/40 text-white placeholder-emerald-400/50 text-sm focus:outline-none focus:border-gold-500/60 focus:ring-1 focus:ring-gold-500/20 transition-all backdrop-blur-md"
       >
+      <button id="clearSearchBtn" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-emerald-400/60 hover:text-white">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
       <button id="clearSearchBtn" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-emerald-400/60 hover:text-white">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>

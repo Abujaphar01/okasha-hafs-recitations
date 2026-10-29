@@ -1,5 +1,5 @@
 // Service Worker for Okasha Kameny Hafs PWA (Offline Quran Audio)
-const CACHE_NAME = 'okasha-hafs-v1.5';
+const CACHE_NAME = 'okasha-hafs-v1.6';
 
 const STATIC_ASSETS = [
   './',

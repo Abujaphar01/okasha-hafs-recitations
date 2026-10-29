@@ -188,15 +188,15 @@ function renderList(items) {
     card.innerHTML = `
       <div class="flex items-center gap-3.5 min-w-0">
         <!-- Number or Equalizer Waves -->
-        <div class="w-11 h-11 rounded-xl flex items-center justify-center font-extrabold text-sm shrink-0 transition-all ${
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition-all ${
           isCurrent && isPlaying
             ? 'bg-gold-500 text-emerald-950 shadow-md shadow-gold-500/40' 
             : isCurrent
             ? 'bg-emerald-800 text-gold-300 border border-gold-500/50'
-            : 'bg-emerald-950/80 border border-emerald-700/50 text-emerald-300 group-hover:border-gold-500/50 group-hover:text-gold-400'
+            : 'bg-emerald-950/70 border border-emerald-800/40 text-emerald-300 group-hover:text-gold-400'
         }">
           ${isCurrent && isPlaying ? `
-            <div class="flex items-end gap-0.5 h-4">
+            <div class="flex items-end gap-0.5 h-3.5">
               <span class="w-1 bg-emerald-950 rounded-full wave-bar-1"></span>
               <span class="w-1 bg-emerald-950 rounded-full wave-bar-2"></span>
               <span class="w-1 bg-emerald-950 rounded-full wave-bar-3"></span>
@@ -208,27 +208,19 @@ function renderList(items) {
         <!-- Track Info -->
         <div class="truncate min-w-0">
           <div class="flex items-center gap-2">
-            <h3 class="font-bold text-white text-sm sm:text-base truncate ${isCurrent ? 'text-gold-300' : ''}">
+            <h3 class="font-semibold text-white text-sm sm:text-base truncate ${isCurrent ? 'text-gold-300' : ''}">
               Surah ${item.nameEn}
             </h3>
-            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-900/90 text-emerald-300 border border-emerald-700/40 shrink-0">
+            <span class="text-[11px] font-medium text-emerald-400/80 shrink-0">
               ${item.ayahRange}
             </span>
-            ${isCurrent && isPlaying ? `
-              <span class="hidden sm:inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-gold-500/20 text-gold-300 border border-gold-500/40 animate-pulse">
-                Now Playing
-              </span>
-            ` : ''}
           </div>
-          <p class="text-xs text-emerald-400/80 truncate mt-0.5">
-            ${item.meaning} • <span class="text-gold-400/90 font-medium">${item.type}</span>
-          </p>
         </div>
       </div>
 
       <!-- Right: Arabic Calligraphy & Duration -->
       <div class="flex items-center gap-3 shrink-0 ml-3 text-right">
-        <span class="font-['Amiri'] text-xl sm:text-2xl font-bold ${isCurrent ? 'text-gold-300' : 'text-emerald-200/90'} group-hover:text-gold-300 transition-colors">
+        <span class="font-['Amiri'] text-xl sm:text-2xl font-bold ${isCurrent ? 'text-gold-300' : 'text-emerald-100'} group-hover:text-gold-300 transition-colors">
           ${item.nameAr}
         </span>
         <span class="text-xs text-emerald-400/60 font-mono hidden sm:inline-block w-12 text-right">
@@ -426,17 +418,16 @@ function getFilteredList() {
   const query = searchInput.value.trim().toLowerCase();
   clearSearchBtn.classList.toggle('hidden', !query);
   if (!query) {
-    trackCountBadge.textContent = `${playlist.length} Verified Recitations`;
+    if (trackCountBadge) trackCountBadge.textContent = `${playlist.length} Recitations`;
     return playlist;
   }
   const filtered = playlist.filter(item => 
     item.nameEn.toLowerCase().includes(query) ||
     item.nameAr.includes(query) ||
-    item.meaning.toLowerCase().includes(query) ||
     item.ayahRange.toLowerCase().includes(query) ||
     String(item.surahNum) === query
   );
-  trackCountBadge.textContent = `${filtered.length} of ${playlist.length} Found`;
+  if (trackCountBadge) trackCountBadge.textContent = `${filtered.length} found`;
   return filtered;
 }
 
