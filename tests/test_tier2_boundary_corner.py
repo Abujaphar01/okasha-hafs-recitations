@@ -9,7 +9,9 @@ Verifies boundary conditions, error handling, adversarial inputs, and attack res
 
 from __future__ import annotations
 
+import json
 import re
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -175,48 +177,99 @@ class TestTier2CrossOriginCacheBoundaries(unittest.TestCase):
 
 
 class TestTier2MalformedRangeHeaderBoundaries(unittest.TestCase):
-    """Category 3: Malformed & Boundary HTTP Range Header Parsing."""
+    """Category 3: Malformed & Boundary HTTP Range Header Parsing (Direct sw.js Execution)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.sw_path = WEB_SW_JS
+        cls.sw_content = WEB_SW_JS.read_text(encoding="utf-8") if WEB_SW_JS.is_file() else ""
+
+    def _eval_sw_range(self, range_header: str | None, total_size: int) -> dict:
+        """
+        Directly executes handleAudioRequest from sw.js in Node.js VM to ensure
+        genuine production execution without mocking or test masking.
+        """
+        js_code = """
+        const fs = require('fs');
+        const vm = require('vm');
+        const swPath = process.argv[1];
+        const rangeHeader = process.argv[2] === '__NONE__' ? null : process.argv[2];
+        const totalLength = parseInt(process.argv[3], 10);
+        const swCode = fs.readFileSync(swPath, 'utf8');
+
+        const sandbox = {
+            self: {
+                addEventListener: () => {},
+                location: { origin: 'http://localhost' },
+                clients: { claim: () => {} },
+                skipWaiting: () => {}
+            },
+            Response: class {
+                constructor(body, init) {
+                    this.body = body;
+                    this.status = (init && init.status) || 200;
+                    this.statusText = (init && init.statusText) || 'OK';
+                    this.headers = (init && init.headers) || {};
+                }
+            },
+            caches: {
+                open: async () => ({
+                    match: async () => ({
+                        status: 200,
+                        headers: {},
+                        arrayBuffer: async () => new ArrayBuffer(totalLength)
+                    }),
+                    put: async () => {}
+                }),
+                match: async () => null
+            },
+            fetch: async () => { throw new Error('offline'); }
+        };
+
+        vm.createContext(sandbox);
+        vm.runInContext(swCode, sandbox);
+
+        (async () => {
+            const req = {
+                url: 'http://localhost/audio/test.mp3',
+                headers: {
+                    get: (h) => h.toLowerCase() === 'range' ? rangeHeader : null
+                }
+            };
+            const res = await sandbox.handleAudioRequest(req);
+            const headers = res.headers || {};
+            let start = 0;
+            let end = totalLength - 1;
+            const contentRange = headers['Content-Range'];
+            if (contentRange) {
+                const match = contentRange.match(/bytes (\\d+)-(\\d+)\\//);
+                if (match) {
+                    start = parseInt(match[1], 10);
+                    end = parseInt(match[2], 10);
+                }
+            }
+            console.log(JSON.stringify({
+                status: res.status,
+                start: start,
+                end: end,
+                contentRange: contentRange || null,
+                contentLength: headers['Content-Length'] !== undefined ? parseInt(headers['Content-Length'], 10) : null,
+                acceptRanges: headers['Accept-Ranges'] || null
+            }));
+        })();
+        """
+        arg_range = range_header if range_header is not None else "__NONE__"
+        proc = subprocess.run(
+            ["node", "-e", js_code, str(self.sw_path), arg_range, str(total_size)],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return json.loads(proc.stdout.strip())
 
     def _parse_range_header(self, range_header: str, total_size: int) -> tuple[int, int, int]:
-        """
-        Parses Range header according to RFC 7233 / RFC 9110.
-        Returns: (status_code, start_byte, end_byte)
-        status_code: 206 (Partial Content), 200 (Full Content fallback), 416 (Range Not Satisfiable)
-        """
-        if not range_header or not range_header.startswith("bytes="):
-            return 200, 0, total_size - 1
-
-        range_val = range_header[len("bytes="):].strip()
-        # Single range: start-end, start-, or -suffix
-        parts = range_val.split("-")
-        if len(parts) != 2:
-            return 200, 0, total_size - 1
-
-        start_str, end_str = parts[0].strip(), parts[1].strip()
-
-        try:
-            if start_str and end_str:
-                start = int(start_str)
-                end = int(end_str)
-                if start > end or start >= total_size:
-                    return 416, 0, 0
-                end = min(end, total_size - 1)
-                return 206, start, end
-            elif start_str and not end_str:
-                start = int(start_str)
-                if start >= total_size:
-                    return 416, 0, 0
-                return 206, start, total_size - 1
-            elif not start_str and end_str:
-                suffix_len = int(end_str)
-                if suffix_len == 0:
-                    return 416, 0, 0
-                suffix_len = min(suffix_len, total_size)
-                return 206, total_size - suffix_len, total_size - 1
-            else:
-                return 200, 0, total_size - 1
-        except ValueError:
-            return 200, 0, total_size - 1
+        res = self._eval_sw_range(range_header, total_size)
+        return res["status"], res["start"], res["end"]
 
     def test_t2_3_non_numeric_range_fallback(self):
         """T2.3.1: Malformed non-numeric range (bytes=foo-bar) falls back safely."""
@@ -249,12 +302,33 @@ class TestTier2MalformedRangeHeaderBoundaries(unittest.TestCase):
         self.assertEqual(end, 499)
         self.assertEqual(end - start + 1, 500)
 
+    def test_t2_3_upper_bound_clamped_to_eof(self):
+        """T2.3.6: Range end exceeding file size (bytes=0-99999999) is clamped to EOF with 206."""
+        status, start, end = self._parse_range_header("bytes=0-99999999", 2000)
+        self.assertEqual(status, 206)
+        self.assertEqual(start, 0)
+        self.assertEqual(end, 1999)
+
+    def test_t2_3_zero_suffix_returns_416(self):
+        """T2.3.7: Zero suffix length (bytes=-0) returns 416 Range Not Satisfiable."""
+        status, _, _ = self._parse_range_header("bytes=-0", 2000)
+        self.assertEqual(status, 416)
+
+    def test_t2_3_open_ended_range_to_eof(self):
+        """T2.3.8: Open-ended range (bytes=1000-) returns slice to EOF with 206."""
+        status, start, end = self._parse_range_header("bytes=1000-", 2000)
+        self.assertEqual(status, 206)
+        self.assertEqual(start, 1000)
+        self.assertEqual(end, 1999)
+
     def test_t2_3_sw_js_contains_range_handler(self):
-        """T2.3.6: sw.js defines handleAudioRequest supporting byte ranges."""
+        """T2.3.9: sw.js defines handleAudioRequest supporting byte ranges."""
         sw_content = WEB_SW_JS.read_text(encoding="utf-8") if WEB_SW_JS.is_file() else ""
         self.assertIn("handleAudioRequest", sw_content)
         self.assertIn("bytes=", sw_content)
         self.assertIn("Content-Range", sw_content)
+        self.assertIn("suffixMatch", sw_content)
+        self.assertIn("Accept-Ranges", sw_content)
 
 
 class TestTier2CSPViolationResistanceBoundaries(unittest.TestCase):
@@ -348,6 +422,11 @@ class TestTier2CSPViolationResistanceBoundaries(unittest.TestCase):
             "'none'" in default_src or "'none'" in object_src,
             "CSP must block Flash/plugins with default-src 'none' or object-src 'none'",
         )
+
+    def test_t2_4_declares_base_uri_self(self):
+        """T2.4.7: CSP explicitly declares base-uri 'self' for defense-in-depth."""
+        base_uri = self.directives.get("base-uri", [])
+        self.assertIn("'self'", base_uri, "CSP must define base-uri 'self' to prevent base tag hijacking")
 
 
 if __name__ == "__main__":

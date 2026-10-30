@@ -110,24 +110,59 @@ async function handleAudioRequest(request) {
     return cachedResponse;
   }
 
-  // Build 206 Partial Content Response for Byte-Range Seeking
+  // Build 206 Partial Content Response for Byte-Range Seeking per RFC 7233 / RFC 9110
   const arrayBuffer = await cachedResponse.arrayBuffer();
   const totalLength = arrayBuffer.byteLength;
-  const matches = rangeHeader.match(/bytes=(\d+)-(\d*)/);
 
-  if (!matches) {
+  // 1. Suffix range handling: bytes=-<suffix>
+  const suffixMatch = rangeHeader.match(/^bytes=-(\d+)$/);
+  if (suffixMatch) {
+    const suffix = parseInt(suffixMatch[1], 10);
+    if (suffix === 0) {
+      return new Response('', {
+        status: 416,
+        statusText: 'Range Not Satisfiable',
+        headers: { 'Content-Range': `bytes */${totalLength}` }
+      });
+    }
+    const start = Math.max(0, totalLength - suffix);
+    const end = totalLength - 1;
+    const slicedBuffer = arrayBuffer.slice(start, end + 1);
+
+    return new Response(slicedBuffer, {
+      status: 206,
+      statusText: 'Partial Content',
+      headers: {
+        'Content-Type': 'audio/mpeg',
+        'Content-Range': `bytes ${start}-${end}/${totalLength}`,
+        'Content-Length': slicedBuffer.byteLength,
+        'Accept-Ranges': 'bytes',
+        'Cache-Control': 'public, max-age=31536000'
+      }
+    });
+  }
+
+  // 2. Standard range handling: bytes=<start>-<end?>
+  const rangeMatch = rangeHeader.match(/^bytes=(\d+)-(\d*)$/);
+  if (!rangeMatch) {
     return cachedResponse;
   }
 
-  const start = parseInt(matches[1], 10);
-  const end = matches[2] ? parseInt(matches[2], 10) : totalLength - 1;
+  let start = parseInt(rangeMatch[1], 10);
+  let end = rangeMatch[2] ? parseInt(rangeMatch[2], 10) : totalLength - 1;
 
-  if (start >= totalLength || end >= totalLength) {
+  // Inverted range (start > end) or start out of bounds (start >= totalLength)
+  if (start >= totalLength || (rangeMatch[2] && start > end)) {
     return new Response('', {
       status: 416,
       statusText: 'Range Not Satisfiable',
       headers: { 'Content-Range': `bytes */${totalLength}` }
     });
+  }
+
+  // Clamp end to totalLength - 1 per RFC 7233 Section 2.1
+  if (end >= totalLength) {
+    end = totalLength - 1;
   }
 
   const slicedBuffer = arrayBuffer.slice(start, end + 1);
