@@ -565,7 +565,7 @@ let isCachingAll = false;
 if (cacheAllBtn && cacheAllText) {
   // Check if all tracks are cached
   if ('caches' in window) {
-    caches.open('okasha-hafs-v1.5').then(async (cache) => {
+    caches.open('okasha-hafs-v2.0').then(async (cache) => {
       const keys = await cache.keys();
       const allCached = playlist.every(t => keys.some(k => k.url.includes(t.file)));
       if (allCached) {
@@ -587,7 +587,7 @@ if (cacheAllBtn && cacheAllText) {
     showToast("Downloading all 9 recitations into offline storage...", "📥");
 
     try {
-      const cache = await caches.open('okasha-hafs-v1.5');
+      const cache = await caches.open('okasha-hafs-v2.0');
       for (let i = 0; i < playlist.length; i++) {
         cacheAllText.textContent = `Saving ${i + 1}/${playlist.length}...`;
         const res = await fetch(playlist[i].file);

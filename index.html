@@ -2,6 +2,7 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; media-src 'self' blob:; img-src 'self' data:; connect-src 'self'; manifest-src 'self';">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Okasha Kameny — Hafs 'An-Asim Recitations</title>
   
@@ -12,40 +13,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Okasha Hafs">
   <link rel="icon" type="image/jpeg" href="img/sheikh_okasha_thumb.jpg">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            emerald: {
-              950: '#03120d',
-              900: '#07241b',
-              850: '#0b3226',
-              800: '#114434',
-              700: '#175e47',
-              600: '#1e7c5e',
-              500: '#279f79',
-            },
-            gold: {
-              300: '#fae392',
-              400: '#f5d369',
-              500: '#e5b839',
-              600: '#c69922',
-              700: '#997314'
-            }
-          },
-          fontFamily: {
-            arabic: ['"Amiri"', '"Scheherazade New"', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
+  <!-- Compiled Tailwind CSS -->
+  <link rel="stylesheet" href="tailwind.min.css">
 
   <!-- Google Fonts for Arabic & English Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -141,10 +113,6 @@
       >
       <button id="clearSearchBtn" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-emerald-400/60 hover:text-white">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-    </div>
-      <button id="clearSearchBtn" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-emerald-400/60 hover:text-white">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
 

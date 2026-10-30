@@ -1,9 +1,10 @@
 // Service Worker for Okasha Kameny Hafs PWA (Offline Quran Audio)
-const CACHE_NAME = 'okasha-hafs-v1.6';
+const CACHE_NAME = 'okasha-hafs-v2.0';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
+  './tailwind.min.css',
   './style.css',
   './app.js',
   './manifest.json',
@@ -39,6 +40,16 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
+
+  // Enforce same-origin boundary on all fetch requests
+  if (url.origin !== self.location.origin) {
+    return; // Allow network directly, do not cache cross-origin
+  }
+
+  // Only handle GET requests
+  if (request.method !== 'GET') {
+    return;
+  }
 
   // Audio files (.mp3) - Cached on demand with Byte-Range support
   if (url.pathname.endsWith('.mp3')) {
